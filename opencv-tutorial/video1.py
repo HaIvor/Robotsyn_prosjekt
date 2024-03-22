@@ -20,7 +20,7 @@ cv2.imwrite("assets/rotated_img.jpg",img)
 #1, cv2.IMREAD_UNCHANGED : Loads image as such including alpha channel
 
 cv2.imshow("Image",img)
-#wait an infinite amount of time for a key to be pressed (5 is 5 seconds)
+#wait an infinite amount of time for a key to be pressed (5 is 5 milliseconds)
 cv2.waitKey(0)
 #then destroy them all so they dont run in the background for no reason
 cv2.destroyAllWindows()
