@@ -18,6 +18,7 @@ converted_points = np.float32([[0,0], [width, 0], [0, height], [width, height]])
 
 # perspective transformation
 matrix = cv2.getPerspectiveTransform(input_points, converted_points)
+print(matrix)
 img_output = cv2.warpPerspective(img, matrix, (width, height))
 
 # ----------------- Displaying --------------
