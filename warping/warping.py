@@ -1,14 +1,13 @@
 import cv2
 import numpy as np
 
-img = cv2.imread("1.jpg")
-img = cv2.resize(img, (0,0), fx=0.155, fy=0.155)
+img = cv2.imread("assets/rotated_maad.jpg")
 print(img.shape)
 
 cv2.imwrite("assets/maad_scaled.jpg", img)
 
 #Pixel values in the original image
-input_points = np.float32([[164, 249],[323, 192], [159, 401], [363, 353]])
+input_points = np.float32([[1063,1609], [2087,1235], [1029, 2592], [2329,2271]])
 
 #Output image size
 width = 400
@@ -23,8 +22,8 @@ img_output = cv2.warpPerspective(img, matrix, (width, height))
 
 # ----------------- Displaying --------------
 # Define the desired width and height for display
-desired_width = 600
-desired_height = 400
+desired_width = 500
+desired_height = 667
 
 # Resize the image
 resized_image = cv2.resize(img, (desired_width, desired_height))
