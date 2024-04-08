@@ -14,6 +14,7 @@ def biggest_contour(contours):
                 max_area = area
     return biggest
 
+img = cv2.imread("assets/pult.jpg")
 img = cv2.imread("assets/rotated_maad.jpg")
 img_original = img.copy()
 
@@ -28,6 +29,9 @@ edged = cv2.Canny(gray, 95, 230)
 
 contours, hierarchy = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 contours = sorted(contours, key = cv2.contourArea, reverse = True)[:10]
+
+for i in contours:
+    cv2.drawContours(img, [i], -1, (0, 255, 0), 3)
 
 biggest = biggest_contour(contours)
 cv2.drawContours(img, [biggest], -1, (0, 255, 0), 3)
@@ -56,27 +60,26 @@ print(top_right)
 print(bottom_right)
 print(bottom_left)
 
-# bottom_width = np.sqrt(((bottom_right[0] - bottom_left[0]) ** 2) + ((bottom_right[1] - bottom_left[1]) ** 2))
-# top_width = np.sqrt(((top_right[0] - top_left[0]) ** 2) + ((top_right[1] - top_left[1]) ** 2))
-# right_height = np.sqrt(((top_right[0] - bottom_right[0]) ** 2) + ((top_right[1] - bottom_right[1]) ** 2))
-# left_height = np.sqrt(((top_left[0] - bottom_left[0]) ** 2) + ((top_left[1] - bottom_left[1]) ** 2))
+bottom_width = np.sqrt(((bottom_right[0] - bottom_left[0]) ** 2) + ((bottom_right[1] - bottom_left[1]) ** 2))
+top_width = np.sqrt(((top_right[0] - top_left[0]) ** 2) + ((top_right[1] - top_left[1]) ** 2))
+right_height = np.sqrt(((top_right[0] - bottom_right[0]) ** 2) + ((top_right[1] - bottom_right[1]) ** 2))
+left_height = np.sqrt(((top_left[0] - bottom_left[0]) ** 2) + ((top_left[1] - bottom_left[1]) ** 2))
 
-# #output image size 
-# max_width = max(int(bottom_width), int(top_width))
-# max_height = max(int(right_height), int(left_height))
+#output image size 
+max_width = max(int(bottom_width), int(top_width))
+max_height = max(int(right_height), int(left_height))
+print(f"max_width: {max_width}, max_height: {max_height}")
 
-# # converted points 
-# converted_points = np.array([[0,0], [max_width-1, 0], [max_width-1, max_height-1], [0, max_height-1]], dtype="float32")
+# converted points 
+converted_points = np.array([[0,0], [max_width-1, 0], [max_width-1, max_height-1], [0, max_height-1]], dtype="float32")
 width = 500
 height = 500
 
-converted_points = np.array([[0,0], [width-1, 0], [width-1, height-1], [0, height-1]], dtype="float32")
+# converted_points = np.array([[0,0], [width-1, 0], [width-1, height-1], [0, height-1]], dtype="float32")
 
 # perspective transformation
 matrix = cv2.getPerspectiveTransform(input_points, converted_points)
-img_output = cv2.warpPerspective(img_original, matrix, (width, height))
-# for i in contours:
-#     cv2.drawContours(img, [i], -1, (0, 255, 0), 3)
+img_output = cv2.warpPerspective(img_original, matrix, (max_width, max_height))
 
 # Define the desired width and height for display
 desired_width = 500
@@ -95,7 +98,7 @@ cv2.namedWindow("original_resized", cv2.WINDOW_NORMAL)
 cv2.resizeWindow("original_resized", 500*3, 667*3) 
 cv2.imshow("original_resized", img_hor)
 cv2.namedWindow("warped_perspective", cv2.WINDOW_NORMAL) 
-cv2.resizeWindow("warped_perspective", 500, 500)
+cv2.resizeWindow("warped_perspective", max_width, max_height)
 cv2.imshow("warped_perspective", img_output)
 
 # cv2.namedWindow("original_resized", cv2.WINDOW_NORMAL) 
