@@ -1,6 +1,6 @@
 import cv2
 
-img = cv2.imread("assets/notes.png",-1)
+img = cv2.imread("assets/notes.png")
 
 #resize the image to 800x800px
 #img = cv2.resize(img, (800,800))
@@ -23,4 +23,4 @@ cv2.imshow("Image",img)
 #wait an infinite amount of time for a key to be pressed (5 is 5 milliseconds)
 cv2.waitKey(0)
 #then destroy them all so they dont run in the background for no reason
-cv2.destroyAllWindows()
+#cv2.destroyAllWindows()

@@ -1,14 +1,18 @@
 import cv2
 import numpy as np
 
-def biggest_contour(contours):
+def contour_filtering(contours):
     biggest = np.array([])
     max_area = 0
     for i in contours:
-        area = cv2.contourArea(i)
+        area = cv2.contourArea(i) # area in pixels
         if area > 1000:
             peri  = cv2.arcLength(i, True)
-            approx = cv2.approxPolyDP(i, 0.015 * peri, True)
+            print("peri: ", peri)
+            #epsilon: approximation accuracy, True: closed contour
+            epsilon = 0.02 * peri
+            print("epsilon: ", epsilon)
+            approx = cv2.approxPolyDP(i, epsilon, True)
             if area > max_area and len(approx) == 4:
                 biggest = approx
                 max_area = area
@@ -16,24 +20,32 @@ def biggest_contour(contours):
 
 img = cv2.imread("assets/pult.jpg")
 img = cv2.imread("assets/rotated_maad.jpg")
+img = cv2.imread("assets/abc_side1.jpg")
+img = cv2.imread("assets/jingle_side2.jpg")
 img_original = img.copy()
 
 # Image modification
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # Convert to grayscale
 #bilateralFilter(src, diameter , sigmaColor, sigmaSpace[, dst[, borderType]]) -> dst
-gray = cv2.bilateralFilter(gray, 9, 30, 30) # Smoothen the image with bilateral filter
+gray = cv2.bilateralFilter(gray, 4, 94, 70) # Smoothen the image with bilateral filter
 
 # Search for edges
 # Canny(image, threshhold1, threshhold2) -> edges
-edged = cv2.Canny(gray, 95, 230)
+edged = cv2.Canny(gray, 268, 148)
 
-contours, hierarchy = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+#opencv documentation
+contours, hierarchy = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)#edged.copy()?
+
+# sorterer contours etter størrelse, sort descending, tar de 10 største
 contours = sorted(contours, key = cv2.contourArea, reverse = True)[:10]
 
-for i in contours:
-    cv2.drawContours(img, [i], -1, (0, 255, 0), 3)
+# draws all contours! comment away maybe
+# for i in contours:
+#     cv2.drawContours(img, [i], -1, (0, 255, 0), 3)
 
-biggest = biggest_contour(contours)
+#check if as 4 corners and biggest area
+biggest = contour_filtering(contours)
+
 cv2.drawContours(img, [biggest], -1, (0, 255, 0), 3)
 
 # pixel values in the original image (corners)
@@ -92,12 +104,18 @@ desired_height = 667
 gray = np.stack((gray,)*3, axis=-1) 
 edged = np.stack((edged,)*3, axis=-1)
 
-# Image stacking
+# Image stacking, få alle på ett vindu
 img_hor = np.hstack((img_original, gray, edged, img))
-cv2.namedWindow("original_resized", cv2.WINDOW_NORMAL) 
+# skaler ned ellers tar det hele skjermen
+cv2.namedWindow("original_resized", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("original_resized", 500*3, 667*3) 
 cv2.imshow("original_resized", img_hor)
-cv2.namedWindow("warped_perspective", cv2.WINDOW_NORMAL) 
+
+cv2.namedWindow("warped_perspective", cv2.WINDOW_NORMAL)
+if max_width > 500:
+    max_width = 500 
+if max_height > 500:
+    max_height = 500
 cv2.resizeWindow("warped_perspective", max_width, max_height)
 cv2.imshow("warped_perspective", img_output)
 
