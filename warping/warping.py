@@ -20,8 +20,11 @@ def contour_filtering(contours):
 
 img = cv2.imread("assets/pult.jpg")
 img = cv2.imread("assets/rotated_maad.jpg")
-img = cv2.imread("assets/abc_side1.jpg")
-img = cv2.imread("assets/jingle_side2.jpg")
+img = cv2.imread("assets/abc_iphone (4).jpg")
+img = cv2.imread("assets/jingle_iphone (1).jpg")
+# img = cv2.imread("assets/test.jpg")
+img = cv2.imread("assets/christ_iphone (1).jpg")
+# img = cv2.imread("assets/enter_iphone (4).jpg")
 img_original = img.copy()
 
 # Image modification

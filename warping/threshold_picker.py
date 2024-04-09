@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-img = cv2.imread("assets/jingle_side1.jpg")
+img = cv2.imread("assets/maad_scaled.jpg")
 img_original = img.copy()
 
 # Image modification
@@ -45,7 +45,6 @@ while True:
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-
 # ----------------- Displaying --------------
 # Define the desired width and height for display
 # desired_width = 500
