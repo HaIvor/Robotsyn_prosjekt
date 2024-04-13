@@ -10,7 +10,7 @@ def contour_filtering(contours):
             peri  = cv2.arcLength(i, True)
             print("peri: ", peri)
             #epsilon: approximation accuracy, True: closed contour
-            epsilon = 0.02 * peri
+            epsilon = 0.02* peri
             print("epsilon: ", epsilon)
             approx = cv2.approxPolyDP(i, epsilon, True)
             if area > max_area and len(approx) == 4:
@@ -20,8 +20,8 @@ def contour_filtering(contours):
 
 img = cv2.imread("assets/pult.jpg")
 img = cv2.imread("assets/rotated_maad.jpg")
-img = cv2.imread("assets/abc_iphone (3).jpg")
-# img = cv2.imread("assets/jingle_iphone (3).jpg")
+# img = cv2.imread("assets/abc_iphone (4).jpg")
+img = cv2.imread("assets/jingle_iphone (2).jpg")
 # img = cv2.imread("assets/test.jpg")
 # img = cv2.imread("assets/christ_iphone (1).jpg")
 # img = cv2.imread("assets/enter_iphone (4).jpg")
@@ -39,10 +39,10 @@ edged = cv2.Canny(gray, 268, 148)
 # Trackbar for choosing parameters
 cv2.namedWindow("trackbar_window", cv2.WINDOW_NORMAL)
 cv2.namedWindow("original_image", cv2.WINDOW_NORMAL)
-cv2.createTrackbar("threshold1", "trackbar_window", 100, 600, lambda x: None)
-cv2.createTrackbar("threshold2", "trackbar_window", 100, 600, lambda x: None)
+cv2.createTrackbar("threshold1", "trackbar_window", 100, 1000, lambda x: None)
+cv2.createTrackbar("threshold2", "trackbar_window", 300, 1000, lambda x: None)
 cv2.createTrackbar("diameter", "trackbar_window", 9, 75, lambda x: None)
-cv2.createTrackbar("sigmaColor", "trackbar_window", 75, 150, lambda x: None)
+cv2.createTrackbar("sigmaColor", "trackbar_window", 99, 150, lambda x: None)
 cv2.createTrackbar("sigmaSpace", "trackbar_window", 75, 150, lambda x: None)
 
 while True:
@@ -66,21 +66,18 @@ while True:
         break
 print(f"threshold1: {threshold1_pos}, threshold2: {threshold2_pos}, diameter: {diameter_pos}, sigmaColor: {sigmaColor_pos}, sigmaSpace: {sigmaSpace_pos}")
 #opencv documentation
-#cv2.finfContours(image, mode, method[, contours[, hierarchy[, offset]]]) -> contours, hierarchy
-#mode: contour retrieval mode, method: contour approximation method
 contours, hierarchy = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)#edged.copy()?
+
 # sorterer contours etter størrelse, sort descending, tar de 10 største
-contours = sorted(contours, key = cv2.contourArea, reverse = True)[:1]
-print(contours)
+contours = sorted(contours, key = cv2.contourArea, reverse = True)[:10]
+
 # draws all contours! comment away maybe
 for i in contours:
     cv2.drawContours(img, [i], -1, (0, 255, 0), 3)
 
 #check if as 4 corners and biggest area
 biggest = contour_filtering(contours)
-if biggest.size == 0:
-    print("No 4 vertices found! Exiting..")
-    exit(1)
+
 cv2.drawContours(img, [biggest], -1, (0, 255, 0), 3)
 
 # pixel values in the original image (corners)
@@ -153,7 +150,6 @@ if max_height > 500:
     max_height = 500
 cv2.resizeWindow("warped_perspective", max_width, max_height)
 cv2.imshow("warped_perspective", img_output)
-cv2.imwrite("assets/martin.jpg", img_output)
 
 # cv2.namedWindow("original_resized", cv2.WINDOW_NORMAL) 
 # cv2.resizeWindow("original_resized", 500, 667) 

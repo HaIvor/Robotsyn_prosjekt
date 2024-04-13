@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 
 img = cv2.imread("assets/maad_scaled.jpg")
+img = cv2.imread('assets/abc.jpg')
 img_original = img.copy()
 
 # Image modification
