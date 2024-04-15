@@ -93,31 +93,58 @@ for sublist in split_lines:
             value_to_add = 1
 print("split_lines:", split_lines)
 circles = []
-circle1 = (300,330,18)
+#bruteforce circle for now
+circle1 = (300,300,14)
 cv2.circle(img, (circle1[0],circle1[1]),circle1[2],(0,0,255),-1)
 circles.append((circle1[0],circle1[1],circle1[2]))
 
 
+# Classify notes
 for circle in circles:
+    no_intersection_found = True
     (x_c,y_c,r) = circle
     for line in split_lines:
-        for x1,y1,x2,y2,rho,theta, note_pos in line:
+        for x1,y1,x2,y2,rho,theta,note_pos in line:
             intersect = line_circle_intersection((x1,y1),(x2,y2),(x_c,y_c),r)
             if intersect:
+                no_intersection_found = False
                 print(f"intersection at note_pos {note_pos}")
                 if note_pos == 1:
                     print("note is a E")
                 elif note_pos == 2:
                     print("note is a G")
                 elif note_pos == 3:
-                    print("note is a B")
+                    print("note is a B")   
                 elif note_pos == 4:
                     print("note is a D")
                 elif note_pos == 5:
                     print("note is a F")
-            else:
-                print("no intersection")
-
+    if no_intersection_found:
+        #code for notes in between lines
+        for line in split_lines:
+            smallest_distance = 1000000
+            distances_info = []
+            distance_info = ()
+            for x1,y1,x2,y2,rho,theta,note_pos in line:
+                distance = abs(y1-y_c)
+                distance_info = (distance, note_pos)
+                distances_info.append(distance_info)
+        print("distances_info:",distances_info)
+        distances_info_sorted = sorted(distances_info, key=lambda x: x[0])
+        print("distances_info_sorted:",distances_info_sorted)
+        closest_note_pos = distances_info_sorted[0][1]
+        second_closest_note_pos = distances_info_sorted[1][1]
+        print("closest_note_pos and second_closest_note_pos:",closest_note_pos,second_closest_note_pos)
+        # print("distances_info_sorted",distances_info_sorted)
+        if closest_note_pos == 1 and second_closest_note_pos == 2 or closest_note_pos == 2 and second_closest_note_pos == 1:
+            print("note is a F")
+        elif closest_note_pos == 2 and second_closest_note_pos == 3 or closest_note_pos == 3 and second_closest_note_pos == 2:
+            print("note is a A")
+        elif closest_note_pos == 3 and second_closest_note_pos == 4 or closest_note_pos == 4 and second_closest_note_pos == 3:
+            print("note is a C")
+        elif closest_note_pos == 4 and second_closest_note_pos == 5 or closest_note_pos == 5 and second_closest_note_pos == 4:
+            print("note is a E")
+        print("No intersection found")
 # print("\n\n",split_lines)
 cv2.namedWindow("hough", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("hough", img.shape[0]-200, img.shape[1]-130) 

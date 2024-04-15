@@ -24,3 +24,19 @@ for sublist in split_lines:
             value_to_add = 1
 
 print(split_lines)
+
+test_tuple = [[(1, 2, 3, 4)], [(5, 6, 7, 8)]]
+print(test_tuple[1][0][3])
+distance_info = (distance, note_pos)
+
+    if no_intersection_found:
+        #code for notes in between lines
+        for line in split_lines:
+            smallest_distance = 1000000
+            for x1,y1,x2,y2,rho,theta,note_pos in line:
+                distance = abs(y1-y_c)
+                if distance < smallest_distance:
+                    smallest_distance = distance
+                    smallest_info = (smallest_distance, note_pos)
+        print("smallest_info:",smallest_info)
+        if smallest_info[1] == 5 and line[]:
