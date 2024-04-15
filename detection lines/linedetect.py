@@ -60,7 +60,7 @@ for lin in filtered_lines:
 print("number of lines:", len(sorted_lines))
 #split into 5 lines
 split_lines = [sorted_lines[i:i+5] for i in range(0, len(sorted_lines), 5)]
-cv2.circle(img, (300,300),8,(0,0,255),-1)
+cv2.circle(img, (300,300),9,(0,0,255),-1)
 print("\n\n",split_lines)
 cv2.namedWindow("hough", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("hough", img.shape[0]-200, img.shape[1]-130) 
