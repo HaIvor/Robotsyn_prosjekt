@@ -6,7 +6,7 @@ canvas = np.zeros((500, 500, 3), dtype=np.uint8)
 
 # Define a line (two points)
 line_start = (100, 100)
-line_end = (350, 200)
+line_end = (230, 200)
 cv2.line(canvas, line_start, line_end, (0, 255, 0), 1)
 
 # Define a circle (center and radius)
