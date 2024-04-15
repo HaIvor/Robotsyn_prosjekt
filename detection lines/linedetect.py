@@ -29,7 +29,7 @@ edges = cv2.Canny(gray,50,150,apertureSize = 3)
 # cv2.imshow('hough',edges)
 cv2.waitKey(0)
 lines_ro_theta = cv2.HoughLines(edges,1,np.pi/180,200) # 200 is the threshold
-print(lines_ro_theta)
+# print(lines_ro_theta)
 lines_x_y = []
 for line in lines_ro_theta:
     for rho,theta in line:
@@ -70,7 +70,7 @@ def check_close_line(line,filter_lines,treshold):
     return False
 
 filtered_lines = remove_close_lines(lines_x_y,30)
-print(len(filtered_lines))
+# print(len(filtered_lines))
 
 for lin in filtered_lines:
     x1,y1,x2,y2,rho,theta = lin
@@ -80,7 +80,7 @@ for lin in filtered_lines:
         x1, y1, x2, y2, rho, theta = lin
         cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
     cv2.line(img,(x1,y1),(x2,y2),(0,0,255),2)
-print("number of lines:", len(sorted_lines))
+# print("number of lines:", len(sorted_lines))
 #split into 5 lines
 split_lines = [sorted_lines[i:i+5] for i in range(0, len(sorted_lines), 5)]
 
@@ -91,13 +91,16 @@ for sublist in split_lines:
         value_to_add += 1
         if value_to_add > 5:
             value_to_add = 1
-print("split_lines:", split_lines)
+# print("split_lines:", split_lines)
 circles = []
 #bruteforce circle for now
-circle1 = (300,300,14)
+circle1 = (300,200,14)
 cv2.circle(img, (circle1[0],circle1[1]),circle1[2],(0,0,255),-1)
 circles.append((circle1[0],circle1[1],circle1[2]))
 
+circle2 = (300,100,14)
+cv2.circle(img, (circle2[0],circle2[1]),circle2[2],(0,0,255),-1)
+circles.append((circle2[0],circle2[1],circle2[2]))
 
 # Classify notes
 for circle in circles:
@@ -127,24 +130,30 @@ for circle in circles:
             distance_info = ()
             for x1,y1,x2,y2,rho,theta,note_pos in line:
                 distance = abs(y1-y_c)
-                distance_info = (distance, note_pos)
+                distance_info = (distance, note_pos, y1)
                 distances_info.append(distance_info)
-        print("distances_info:",distances_info)
+        # print("distances_info:",distances_info)
         distances_info_sorted = sorted(distances_info, key=lambda x: x[0])
-        print("distances_info_sorted:",distances_info_sorted)
+        # print("distances_info_sorted:",distances_info_sorted)
         closest_note_pos = distances_info_sorted[0][1]
         second_closest_note_pos = distances_info_sorted[1][1]
-        print("closest_note_pos and second_closest_note_pos:",closest_note_pos,second_closest_note_pos)
+        if closest_note_pos == 1 and (y_c > distances_info_sorted[0][2]):
+            print("Note is D (bottom)")
+            break
+        if closest_note_pos == 5 and (y_c < distances_info_sorted[0][2]):
+            print("Note is G (top)")
+            break
+        # print("closest_note_pos and second_closest_note_pos:",closest_note_pos,second_closest_note_pos)
         # print("distances_info_sorted",distances_info_sorted)
         if closest_note_pos == 1 and second_closest_note_pos == 2 or closest_note_pos == 2 and second_closest_note_pos == 1:
             print("note is a F")
         elif closest_note_pos == 2 and second_closest_note_pos == 3 or closest_note_pos == 3 and second_closest_note_pos == 2:
-            print("note is a A")
+            print("note is a A.")
         elif closest_note_pos == 3 and second_closest_note_pos == 4 or closest_note_pos == 4 and second_closest_note_pos == 3:
             print("note is a C")
         elif closest_note_pos == 4 and second_closest_note_pos == 5 or closest_note_pos == 5 and second_closest_note_pos == 4:
             print("note is a E")
-        print("No intersection found")
+        # print("No intersection found")
 # print("\n\n",split_lines)
 cv2.namedWindow("hough", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("hough", img.shape[0]-200, img.shape[1]-130) 
