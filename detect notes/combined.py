@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 
 # import lineDetection as lines
 import blobblob as blob
+import combined_functions as comb
 
 def line_circle_intersection(line_start, line_end, circle_center, circle_radius):
     # Vector representation of the line
@@ -44,7 +45,7 @@ keypoints = noteDetector.detect(gris)
 circles = []
 radius = 8
 for note in cv2.KeyPoint_convert(keypoints):
-    if note[1] > 500: continue
+    # if note[1] > 500: continue
     image = cv2.circle(img, (round(note[0]),round(note[1])), radius, color=(0,0,255), thickness=-1)
     circles.append((int(note[0]),int(note[1]),radius))
 
@@ -132,65 +133,24 @@ print("hei:",circles)
 for circle in circles:
     no_intersection_found = True
     (x_c,y_c,r) = circle
+    g_clef = True
+    if y_c > 500:
+        g_clef = False
     for line in split_lines:
         for x1,y1,x2,y2,rho,theta,note_pos in line:
             intersect = line_circle_intersection((x1,y1),(x2,y2),(x_c,y_c),r)
-            if intersect:
+            if intersect and g_clef:
                 no_intersection_found = False
                 # print(f"intersection at note_pos {note_pos}")
-                if note_pos == 1:
-                    print("note is a E")
-                    cv2.putText(img, "E", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-                elif note_pos == 2:
-                    print("note is a G")
-                    cv2.putText(img, "G", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-                elif note_pos == 3:
-                    print("note is a B") 
-                    cv2.putText(img, "B", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)  
-                elif note_pos == 4:
-                    print("note is a D")
-                    cv2.putText(img, "D", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-                elif note_pos == 5:
-                    print("note is a F")
-                    cv2.putText(img, "F", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-    if no_intersection_found:
-        #code for notes in between lines
-        for line in split_lines:
-            smallest_distance = 1000000
-            distances_info = []
-            distance_info = ()
-            for x1,y1,x2,y2,rho,theta,note_pos in line:
-                distance = abs(y2-y_c)
-                distance_info = (distance, note_pos, y1)
-                distances_info.append(distance_info)
-        # print("distances_info:",distances_info)
-        distances_info_sorted = sorted(distances_info, key=lambda x: x[0])
-        # print("distances_info_sorted:",distances_info_sorted)
-        closest_note_pos = distances_info_sorted[0][1]
-        second_closest_note_pos = distances_info_sorted[1][1]
-        if closest_note_pos == 1 and (y_c > distances_info_sorted[0][2]):
-            print("Note is D (bottom)")
-            cv2.putText(img, "D (bottom)", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-            continue
-        if closest_note_pos == 5 and (y_c < distances_info_sorted[0][2]):
-            print("Note is G (top)")
-            cv2.putText(img, "G (top)", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-            continue
-        # print("closest_note_pos and second_closest_note_pos:",closest_note_pos,second_closest_note_pos)
-        # print("distances_info_sorted",distances_info_sorted)
-        if closest_note_pos == 1 and second_closest_note_pos == 2 or closest_note_pos == 2 and second_closest_note_pos == 1:
-            print("note is a F")
-            cv2.putText(img, "F", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-        elif closest_note_pos == 2 and second_closest_note_pos == 3 or closest_note_pos == 3 and second_closest_note_pos == 2:
-            print("note is a A.")
-            cv2.putText(img, "A", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-        elif closest_note_pos == 3 and second_closest_note_pos == 4 or closest_note_pos == 4 and second_closest_note_pos == 3:
-            print("note is a C")
-            cv2.putText(img, "C", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-        elif closest_note_pos == 4 and second_closest_note_pos == 5 or closest_note_pos == 5 and second_closest_note_pos == 4:
-            print("note is a E")
-            cv2.putText(img, "E", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-        # print("No intersection found")
+                comb.draw_notes_intersetion_gclef(img, note_pos, x_c, y_c)
+            if intersect and not g_clef:
+                no_intersection_found = False
+                # print(f"intersection at note_pos {note_pos}")
+                comb.draw_notes_intersetion_fclef(img, note_pos, x_c, y_c)
+    if no_intersection_found and g_clef:
+        comb.draw_notes_no_intersection_gclef(line, split_lines, img, x_c, y_c)
+    if no_intersection_found and not g_clef:
+        comb.draw_notes_no_intersection_fclef(line, split_lines, img, x_c, y_c)
 # print("\n\n",split_lines)
 cv2.namedWindow("hough", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("hough", img.shape[0]-200, img.shape[1]-130) 
