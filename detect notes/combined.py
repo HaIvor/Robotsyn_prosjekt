@@ -172,11 +172,12 @@ for circle in circles:
                 # print(f"intersection at note_pos {note_pos}")
                 comb.draw_notes_intersetion_fclef(img, note_pos, x_c, y_c)
     if no_intersection_found and g_clef:
-        comb.draw_notes_no_intersection_gclef(line, split_lines, img, x_c, y_c, line_spacing)
+        comb.draw_notes_no_intersection_gclef(split_lines, img, x_c, y_c, line_spacing)
     if no_intersection_found and not g_clef:
-        comb.draw_notes_no_intersection_fclef(line, split_lines, img, x_c, y_c, line_spacing)
+        comb.draw_notes_no_intersection_fclef(split_lines, img, x_c, y_c, line_spacing)
 # print("\n\n",split_lines)
 cv2.namedWindow("hough", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("hough", img.shape[0]-200, img.shape[1]-130) 
 cv2.imshow('hough',img)
+cv2.imwrite('hough.jpg', img)
 cv2.waitKey(0)
