@@ -121,13 +121,14 @@ for sublist in split_lines:
         if value_to_add > 5:
             value_to_add = 1
 # print("split_lines:", split_lines)
-
+print("\nsplit_lines:\n", split_lines)
 circle2 = (300,100,14)
 cv2.circle(img, (circle2[0],circle2[1]),circle2[2],(0,0,255),-1)
 circles.append((circle2[0],circle2[1],circle2[2]))
 print(len(circles))
 # Classify notes
-
+# cv2.circle(img, (333, 333), 8, (255, 0, 0), -1)
+# cv2.circle(img, (730, 557), 8, (0, 0, 230), -1)
 
 print("hei:",circles)
 for circle in circles:
