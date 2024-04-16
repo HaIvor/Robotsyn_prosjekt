@@ -20,7 +20,7 @@ def contour_filtering(contours):
 
 img = cv2.imread("assets/pult.jpg")
 img = cv2.imread("assets/rotated_maad.jpg")
-img = cv2.imread("assets/abc_iphone (1).jpg")
+img = cv2.imread("assets/abc_iphone (6).jpg")
 # img = cv2.imread("assets/jingle_iphone (1).jpg")
 # img = cv2.imread("assets/test.jpg")
 # img = cv2.imread("assets/christ_iphone (1).jpg")
@@ -121,7 +121,7 @@ if max_height > 500:
     max_height = 500
 cv2.resizeWindow("warped_perspective", max_width, max_height)
 cv2.imshow("warped_perspective", img_output)
-cv2.imwrite("warped_output_abc.jpg", img_output)
+# cv2.imwrite("warped_output_abc.jpg", img_output)
 
 # cv2.namedWindow("original_resized", cv2.WINDOW_NORMAL) 
 # cv2.resizeWindow("original_resized", 500, 667) 

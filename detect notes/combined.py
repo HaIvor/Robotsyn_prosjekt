@@ -120,8 +120,18 @@ for sublist in split_lines:
         value_to_add += 1
         if value_to_add > 5:
             value_to_add = 1
+
+for i in range(len(split_lines)):
+    if i % 2 == 0:
+        g_staff = False
+    else:
+        g_staff = True
+    for j in range(len(split_lines[i])):
+        split_lines[i][j] = split_lines[i][j] + (g_staff,)
+
 # print("split_lines:", split_lines)
 print("\nsplit_lines:\n", split_lines)
+print("\n\n\n")
 circle2 = (200,30,14)
 cv2.circle(img, (circle2[0],circle2[1]),circle2[2],(0,0,255),-1)
 circles.append((circle2[0],circle2[1],circle2[2]))
@@ -142,25 +152,34 @@ circles.append((circle4[0],circle4[1],circle4[2]))
 # cv2.circle(img, (333, 333), 8, (255, 0, 0), -1)
 # cv2.circle(img, (730, 557), 8, (0, 0, 230), -1)
 
-print("hei:",circles)
+# print("hei:",circles)
 for circle in circles:
     no_intersection_found = True
     (x_c,y_c,r) = circle
     g_clef = True
 
-    print("split_lines123",split_lines)
-    print(split_lines[0])
+    # print("split_lines123",split_lines)
+    # print(split_lines[0])
     #y pos first line
-    print(split_lines[0][0][3])
+    # print(split_lines[0][0][3])
     line_spacing = split_lines[0][0][3]-split_lines[0][1][3]
 
-
-    if y_c > 350:
-        g_clef = False
-
+    closest_line = None
+    closest_distance = float('inf')
+    for line in split_lines:
+        # print(line)
+        for x1, y1, x2, y2, rho, theta, note_pos, g_clef in line:
+            distance = abs(y_c - ((y1 + y2) / 2))
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_line = line
+    
+    if closest_line is not None:
+        g_clef = closest_line[0][-1]
+    print(g_clef)
 
     for line in split_lines:
-        for x1,y1,x2,y2,rho,theta,note_pos in line:
+        for x1,y1,x2,y2,rho,theta,note_pos, geir in line:
             intersect = line_circle_intersection((x1,y1),(x2,y2),(x_c,y_c),r)
             
             if intersect and g_clef:

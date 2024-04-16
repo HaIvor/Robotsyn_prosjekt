@@ -42,7 +42,7 @@ def draw_notes_no_intersection_gclef(split_lines, img, x_c, y_c, line_spacing):
     distance_info = ()
     for line in split_lines:
         
-        for x1,y1,x2,y2,rho,theta,note_pos in line:
+        for x1,y1,x2,y2,rho,theta,note_pos, grei in line:
             distance = abs(y2-y_c)
             distance_info = (distance, note_pos, y2)
             distances_info.append(distance_info)
@@ -91,7 +91,7 @@ def draw_notes_no_intersection_fclef(split_lines, img, x_c, y_c, line_spacing):
     distance_info = ()
     test_distance = []
     for line in split_lines:
-        for x1, y1, x2, y2, rho, theta, note_pos in line:
+        for x1, y1, x2, y2, rho, theta, note_pos, g_clef in line:
             # print("y2:", y2)
             # print("y_c:", y_c)
             distance = abs(int(y2) - int(y_c))
