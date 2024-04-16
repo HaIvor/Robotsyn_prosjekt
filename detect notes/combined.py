@@ -171,10 +171,11 @@ for circle in circles:
         if closest_note_pos == 1 and (y_c > distances_info_sorted[0][2]):
             print("Note is D (bottom)")
             cv2.putText(img, "D (bottom)", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+            continue
         if closest_note_pos == 5 and (y_c < distances_info_sorted[0][2]):
             print("Note is G (top)")
             cv2.putText(img, "G (top)", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-            
+            continue
         # print("closest_note_pos and second_closest_note_pos:",closest_note_pos,second_closest_note_pos)
         # print("distances_info_sorted",distances_info_sorted)
         if closest_note_pos == 1 and second_closest_note_pos == 2 or closest_note_pos == 2 and second_closest_note_pos == 1:
