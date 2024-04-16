@@ -10,7 +10,7 @@ num_of_lines = 0
 new_staff = []
 
 # Load image 
-image = cv2.imread('halvor.jpg', 0) 
+image = cv2.imread('assets/martin.jpg', 0) 
 #image = cv2.resize(image, (500,350))
 image = cv2.resize(image, (700,700))
 

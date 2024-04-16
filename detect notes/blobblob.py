@@ -1,10 +1,10 @@
 import cv2 
 import numpy as np 
 def removeLines(imageCanny):
-	kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (6,6))#kernel for rectangle
+	kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7,7))#kernel for rectangle
 	imageNoLines = cv2.morphologyEx(imageCanny, cv2.MORPH_CLOSE, kernel)#fills inn lines
 
-	imageNoLines = cv2.threshold(imageNoLines,128,255,cv2.THRESH_BINARY)[1]
+	imageNoLines = cv2.threshold(imageNoLines,100,255,cv2.THRESH_BINARY)[1]
 
 	return imageNoLines
 
@@ -24,11 +24,11 @@ def getNoteDetectParams(minAreal,maxAreal):
 
 	# Set Convexity (the larger -> more like a cricle)
 	params.filterByConvexity = True
-	params.minConvexity = 0.9
+	params.minConvexity = 0.84
 		
 	# Set inertia (this gives ellipse like shape between zero and one i think... cicle is 1)
 	params.filterByInertia = True
-	params.minInertiaRatio = 0.4
+	params.minInertiaRatio = 0.23
 	params.maxInertiaRatio = 0.56
 	return params
 '''

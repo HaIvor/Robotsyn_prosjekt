@@ -28,10 +28,10 @@ def line_circle_intersection(line_start, line_end, circle_center, circle_radius)
     else:
         return False
     
-img = cv2.imread('assets/martin.jpg')
-
+img = cv2.imread('assets/halvor.jpg')
+img = cv2.resize(img, (700,700))
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-edges = cv2.Canny(gray,50,150,apertureSize = 3)
+edges = cv2.Canny(gray,150,250)
 # cv2.imshow('hough',edges)
 
 gris = blob.removeLines(edges)
@@ -48,13 +48,13 @@ for note in cv2.KeyPoint_convert(keypoints):
     # if note[1] > 500: continue
     image = cv2.circle(img, (round(note[0]),round(note[1])), radius, color=(0,0,255), thickness=-1)
     circles.append((int(note[0]),int(note[1]),radius))
-
+cv2.imshow("Notes found", img)
 #bruteforce circle for now
 #(300,210,14) -> bugs to be A...ok if switch to y2..
-circle1 = (300,213,14)
-cv2.circle(img, (circle1[0],circle1[1]),circle1[2],(0,0,255),-1)
-circles.append((circle1[0],circle1[1],circle1[2]))
-print(circles)
+# circle1 = (300,210,14)
+# cv2.circle(img, (circle1[0],circle1[1]),circle1[2],(0,0,255),-1)
+# circles.append((circle1[0],circle1[1],circle1[2]))
+# print(circles)
 
 cv2.waitKey(0)
 lines_ro_theta = cv2.HoughLines(edges,1,np.pi/180,200) # 200 is the threshold
@@ -122,10 +122,10 @@ for sublist in split_lines:
             value_to_add = 1
 # print("split_lines:", split_lines)
 print("\nsplit_lines:\n", split_lines)
-circle2 = (300,100,14)
-cv2.circle(img, (circle2[0],circle2[1]),circle2[2],(0,0,255),-1)
-circles.append((circle2[0],circle2[1],circle2[2]))
-print(len(circles))
+# circle2 = (300,100,14)
+# cv2.circle(img, (circle2[0],circle2[1]),circle2[2],(0,0,255),-1)
+# circles.append((circle2[0],circle2[1],circle2[2]))
+# print(len(circles))
 # Classify notes
 # cv2.circle(img, (333, 333), 8, (255, 0, 0), -1)
 # cv2.circle(img, (730, 557), 8, (0, 0, 230), -1)
@@ -135,7 +135,7 @@ for circle in circles:
     no_intersection_found = True
     (x_c,y_c,r) = circle
     g_clef = True
-    if y_c > 500:
+    if y_c > 400:
         g_clef = False
     for line in split_lines:
         for x1,y1,x2,y2,rho,theta,note_pos in line:
