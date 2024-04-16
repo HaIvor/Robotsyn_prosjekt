@@ -21,9 +21,9 @@ def contour_filtering(contours):
 img = cv2.imread("assets/pult.jpg")
 img = cv2.imread("assets/rotated_maad.jpg")
 img = cv2.imread("assets/abc_iphone (3).jpg")
-# img = cv2.imread("assets/jingle_iphone (1).jpg")
+img = cv2.imread("assets/jingle_iphone (1).jpg")
 # img = cv2.imread("assets/test.jpg")
-# img = cv2.imread("assets/christ_iphone (1).jpg")
+img = cv2.imread("assets/christ_iphone (1).jpg")
 # img = cv2.imread("assets/enter_iphone (4).jpg")
 img_original = img.copy()
 
@@ -113,7 +113,7 @@ img_hor = np.hstack((img_original, gray, edged, img))
 cv2.namedWindow("original_resized", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("original_resized", 500*3, 667*3) 
 cv2.imshow("original_resized", img_hor)
-
+cv2.imwrite("output2.jpg", img_output)
 cv2.namedWindow("warped_perspective", cv2.WINDOW_NORMAL)
 if max_width > 500:
     max_width = 500 

@@ -122,9 +122,21 @@ for sublist in split_lines:
             value_to_add = 1
 # print("split_lines:", split_lines)
 print("\nsplit_lines:\n", split_lines)
-# circle2 = (300,100,14)
-# cv2.circle(img, (circle2[0],circle2[1]),circle2[2],(0,0,255),-1)
-# circles.append((circle2[0],circle2[1],circle2[2]))
+circle2 = (200,30,14)
+cv2.circle(img, (circle2[0],circle2[1]),circle2[2],(0,0,255),-1)
+circles.append((circle2[0],circle2[1],circle2[2]))
+
+circle1 = (200,70,14)
+cv2.circle(img, (circle1[0],circle1[1]),circle1[2],(0,0,255),-1)
+circles.append((circle1[0],circle1[1],circle1[2]))
+
+circle3 = (200,680,14)
+cv2.circle(img, (circle3[0],circle3[1]),circle3[2],(0,0,255),-1)
+circles.append((circle3[0],circle3[1],circle3[2]))
+
+circle4 = (200,640,14)
+cv2.circle(img, (circle4[0],circle4[1]),circle4[2],(0,0,255),-1)
+circles.append((circle4[0],circle4[1],circle4[2]))
 # print(len(circles))
 # Classify notes
 # cv2.circle(img, (333, 333), 8, (255, 0, 0), -1)
@@ -135,11 +147,22 @@ for circle in circles:
     no_intersection_found = True
     (x_c,y_c,r) = circle
     g_clef = True
-    if y_c > 400:
+
+    print("split_lines123",split_lines)
+    print(split_lines[0])
+    #y pos first line
+    print(split_lines[0][0][3])
+    line_spacing = split_lines[0][0][3]-split_lines[0][1][3]
+
+
+    if y_c > 350:
         g_clef = False
+
+
     for line in split_lines:
         for x1,y1,x2,y2,rho,theta,note_pos in line:
             intersect = line_circle_intersection((x1,y1),(x2,y2),(x_c,y_c),r)
+            
             if intersect and g_clef:
                 no_intersection_found = False
                 # print(f"intersection at note_pos {note_pos}")
@@ -149,9 +172,9 @@ for circle in circles:
                 # print(f"intersection at note_pos {note_pos}")
                 comb.draw_notes_intersetion_fclef(img, note_pos, x_c, y_c)
     if no_intersection_found and g_clef:
-        comb.draw_notes_no_intersection_gclef(line, split_lines, img, x_c, y_c)
+        comb.draw_notes_no_intersection_gclef(line, split_lines, img, x_c, y_c, line_spacing)
     if no_intersection_found and not g_clef:
-        comb.draw_notes_no_intersection_fclef(line, split_lines, img, x_c, y_c)
+        comb.draw_notes_no_intersection_fclef(line, split_lines, img, x_c, y_c, line_spacing)
 # print("\n\n",split_lines)
 cv2.namedWindow("hough", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("hough", img.shape[0]-200, img.shape[1]-130) 
