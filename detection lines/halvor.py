@@ -1,7 +1,7 @@
 import cv2
 import numpy as np 
 
-img = cv2.imread('assets/martin.jpg')
+img = cv2.imread('assets/abc_iphone (3).jpg')
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 edges = cv2.Canny(gray,50,150,apertureSize = 3)
 print("width, height: ", edges.shape[0], edges.shape[1])
@@ -32,7 +32,7 @@ for line in lines_ro_theta:
             
 
         approved_lines.append((rho,theta)) 
-        print("rho, theta: ", rho, theta)
+        # print("rho, theta: ", rho, theta)
         a = np.cos(theta)
         b = np.sin(theta)
         x0 = a*rho
@@ -44,7 +44,7 @@ for line in lines_ro_theta:
         
         cv2.line(img,(x1,y1),(x2,y2),(0,0,255),1)
 
-print(approved_lines)
+# print(approved_lines)
 
 cv2.namedWindow("hough", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("hough", img.shape[0]-100, img.shape[1]-120) 

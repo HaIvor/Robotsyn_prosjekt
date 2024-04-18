@@ -10,7 +10,7 @@ num_of_lines = 0
 new_staff = []
 
 # Load image 
-image = cv2.imread('assets/martin.jpg', 0) 
+image = cv2.imread('assets/halvor.jpg', 0) 
 #image = cv2.resize(image, (500,350))
 image = cv2.resize(image, (700,700))
 
@@ -53,6 +53,7 @@ for note in cv2.KeyPoint_convert(keypoints):
 
 # Show blobs 
 cv2.imshow("Notes found", image)  
+cv2.imwrite("circles_plus_lines.jpg",image)
 #cv2.imwrite("test",image)
 cv2.waitKey(0) 
 cv2.destroyAllWindows() 

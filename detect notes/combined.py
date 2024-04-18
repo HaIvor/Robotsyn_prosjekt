@@ -179,7 +179,7 @@ for circle in circles:
     print(g_clef)
 
     for line in split_lines:
-        for x1,y1,x2,y2,rho,theta,note_pos, geir in line:
+        for x1,y1,x2,y2,rho,theta,note_pos,geir in line:
             intersect = line_circle_intersection((x1,y1),(x2,y2),(x_c,y_c),r)
             
             if intersect and g_clef:
@@ -198,5 +198,5 @@ for circle in circles:
 cv2.namedWindow("hough", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("hough", img.shape[0]-200, img.shape[1]-130) 
 cv2.imshow('hough',img)
-cv2.imwrite('hough.jpg', img)
+cv2.imwrite('notes_found.jpg', img)
 cv2.waitKey(0)

@@ -20,7 +20,7 @@ def contour_filtering(contours):
 
 img = cv2.imread("assets/pult.jpg")
 img = cv2.imread("assets/rotated_maad.jpg")
-img = cv2.imread("assets/abc_iphone (3).jpg")
+img = cv2.imread("assets/jingle_iphone (5).jpg")
 # img = cv2.imread("assets/jingle_iphone (1).jpg")
 # img = cv2.imread("assets/test.jpg")
 # img = cv2.imread("assets/christ_iphone (1).jpg")
@@ -42,7 +42,7 @@ cv2.namedWindow("original_image", cv2.WINDOW_NORMAL)
 cv2.createTrackbar("threshold1", "trackbar_window", 100, 600, lambda x: None)
 cv2.createTrackbar("threshold2", "trackbar_window", 100, 600, lambda x: None)
 cv2.createTrackbar("diameter", "trackbar_window", 9, 75, lambda x: None)
-cv2.createTrackbar("sigmaColor", "trackbar_window", 75, 150, lambda x: None)
+cv2.createTrackbar("sigmaColor", "trackbar_window", 75, 300, lambda x: None)
 cv2.createTrackbar("sigmaSpace", "trackbar_window", 75, 150, lambda x: None)
 
 while True:
@@ -154,6 +154,7 @@ if max_height > 500:
 cv2.resizeWindow("warped_perspective", max_width, max_height)
 cv2.imshow("warped_perspective", img_output)
 cv2.imwrite("assets/martin.jpg", img_output)
+cv2.imwrite("assets/step_by_step.jpg", img_hor)
 
 # cv2.namedWindow("original_resized", cv2.WINDOW_NORMAL) 
 # cv2.resizeWindow("original_resized", 500, 667) 
