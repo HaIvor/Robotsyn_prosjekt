@@ -21,7 +21,6 @@ def contour_filtering(contours):
 def get_corner_points(filtered):
     # pixel values of the corners of the biggest contour
     points = filtered.reshape(4,2)
-    print(points)
     corner_points = np.zeros((4,2), dtype="float32")
 
     # points_sum = x + y
@@ -34,9 +33,10 @@ def get_corner_points(filtered):
     corner_points[1] = points[np.argmin(points_diff)]
     corner_points[3] = points[np.argmax(points_diff)]
 
+    # What is contains
     top_left, top_right, bottom_right, bottom_left = corner_points
 
-    return top_left, top_right, bottom_right, bottom_left, corner_points
+    return corner_points
 
 def draw_circles_on_corners(img, corner_points, circle_radius, line_thickness):
 
