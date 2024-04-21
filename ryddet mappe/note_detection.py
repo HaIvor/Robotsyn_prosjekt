@@ -55,7 +55,9 @@ filtered_lines = utils.remove_close_lines(lines_x_y, close_threshold, img)
 
 sorted_lines = sorted(filtered_lines, key=lambda x: x[4], reverse=True)
 
-# Draw the lines
+# Draw the lines!
+#test
+print("Hei")
 for line in sorted_lines:
     x1, y1, x2, y2, rho, theta = line
     cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
