@@ -74,6 +74,7 @@ contours = sorted(contours, key = cv2.contourArea, reverse = True)[:1]
 print(contours)
 # draws all contours! comment away maybe
 for i in contours:
+    #
     cv2.drawContours(img, [i], -1, (0, 255, 0), 3)
 
 #check if as 4 corners and biggest area
