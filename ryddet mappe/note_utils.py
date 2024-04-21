@@ -32,6 +32,17 @@ def getNoteDetectParams(minAreal,maxAreal):
 	params.maxInertiaRatio = 0.56
 	return params
 
+def getLinePosition(rho, theta):
+    a = np.cos(theta)
+    b = np.sin(theta)
+    x0 = a*rho
+    y0 = b*rho
+    x1 = int(x0 + 2000*(-b))
+    y1 = int(y0 + 2000*(a))
+    x2 = int(x0 - 2000*(-b))
+    y2 = int(y0 - 2000*(a))
+    return x1, y1, x2, y2
+
 #True: close line, False: not close line
 def check_close_line(line,filter_lines,treshold, img):
     x1,y1,x2,y2, rho, theta = line

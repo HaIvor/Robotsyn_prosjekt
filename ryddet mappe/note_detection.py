@@ -39,39 +39,34 @@ for line in lines_ro_theta:
         # Filter out lines that are not horizontal
         if theta < wanted_angle - epsilon or theta > wanted_angle + epsilon: continue 
 
-        # calculate the x and y coordinates of the lines from the rho and theta
-        a = np.cos(theta)
-        b = np.sin(theta)
-        x0 = a*rho
-        y0 = b*rho
-        x1 = int(x0 + 2000*(-b))
-        y1 = int(y0 + 2000*(a))
-        x2 = int(x0 - 2000*(-b))
-        y2 = int(y0 - 2000*(a))
+        # calculate the x and y starting/ending coordinates of the lines from the rho and theta
+        x1, y1, x2, y2 = utils.getLinePosition(rho, theta)
         lines_x_y.append((x1,y1,x2,y2, rho, theta))
 
 close_threshold = 30
 filtered_lines = utils.remove_close_lines(lines_x_y, close_threshold, img)
 
+# Sort lines by rho value (distance from origin)
 sorted_lines = sorted(filtered_lines, key=lambda x: x[4], reverse=True)
 
-# Draw the lines!
-#test
-print("Hei")
+# Draw the lines on the image
 for line in sorted_lines:
     x1, y1, x2, y2, rho, theta = line
     cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
+# Split the lines into groups of 5 (5 lines per staff)
 split_lines = [sorted_lines[i:i+5] for i in range(0, len(sorted_lines), 5)]
 
-value_to_add = 1
+# Add note positions to the lines
+note_index = 1
 for sublist in split_lines:
     for index, tup in enumerate(sublist):
-        sublist[index] = tup + (value_to_add,)
-        value_to_add += 1
-        if value_to_add > 5:
-            value_to_add = 1
+        sublist[index] = tup + (note_index,)
+        note_index += 1
+        if note_index > 5:
+            note_index = 1
 
+# Add clef boolean value to every line
 for i in range(len(split_lines)):
     if i % 2 == 0:
         g_staff = False
@@ -80,22 +75,13 @@ for i in range(len(split_lines)):
     for j in range(len(split_lines[i])):
         split_lines[i][j] = split_lines[i][j] + (g_staff,)
 
-circle2 = (200,30,14)
-cv2.circle(img, (circle2[0],circle2[1]),circle2[2],(0,0,255),-1)
-circles.append((circle2[0],circle2[1],circle2[2]))
+# Draw manual circles on the image to show note detection logic
+circle_positions = [(200, 30, 14), (200, 70, 14), (200, 680, 14), (200, 640, 14)]
+for circle in circle_positions:
+    cv2.circle(img, (circle[0], circle[1]), circle[2], (0, 0, 255), -1)
+    circles.append((circle[0], circle[1], circle[2]))
 
-circle1 = (200,70,14)
-cv2.circle(img, (circle1[0],circle1[1]),circle1[2],(0,0,255),-1)
-circles.append((circle1[0],circle1[1],circle1[2]))
-
-circle3 = (200,680,14)
-cv2.circle(img, (circle3[0],circle3[1]),circle3[2],(0,0,255),-1)
-circles.append((circle3[0],circle3[1],circle3[2]))
-
-circle4 = (200,640,14)
-cv2.circle(img, (circle4[0],circle4[1]),circle4[2],(0,0,255),-1)
-circles.append((circle4[0],circle4[1],circle4[2]))
-
+# Draw the notes on the image
 for circle in circles:
     no_intersection_found = True
     (x_c,y_c,r) = circle
