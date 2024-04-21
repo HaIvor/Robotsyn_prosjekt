@@ -62,22 +62,22 @@ def remove_close_lines(lines, treshold, img):
     return filter_lines
 
 def line_circle_intersection(line_start, line_end, circle_center, circle_radius):
-    # Vector representation of the line
+    
+    # Line in vector form
     line_vec = np.array(line_end) - np.array(line_start)
     
-    # Vector from line start to circle center
+    # Line start to circle center vector
     start_to_center = np.array(circle_center) - np.array(line_start)
     
-    # Projection of start_to_center vector onto line_vec
+    # Projection, vector that goes from line start to the closest point on the line to the circle center
     projection = np.dot(start_to_center, line_vec) / np.dot(line_vec, line_vec) * line_vec
-    
     # Closest point on the line to the circle center
     closest_point = np.array(line_start) + projection
     
     # Distance between closest point and circle center
     distance = np.linalg.norm(closest_point - circle_center)
     
-    # If the distance is less than or equal to the circle radius, there's an intersection
+    # True: there's an intersection
     if distance <= circle_radius:
         return True
     else:

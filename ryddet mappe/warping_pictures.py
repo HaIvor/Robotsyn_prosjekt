@@ -37,9 +37,8 @@ while True:
     # Applying the bilateral filter and Canny edge detection from the trackbar positions
     gray_filtered = cv2.bilateralFilter(gray, diameter_pos, sigmaColor_pos, sigmaSpace_pos)
     edged = cv2.Canny(gray_filtered, threshold1_pos, threshold2_pos)
-
     cv2.imshow("trackbar_window", edged)
-    cv2.imshow("original_image", img_original)
+    cv2.imshow("original_image", img)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
@@ -53,18 +52,18 @@ contours, hierarchy = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SI
 # Sort contours by area, biggest first
 contours = sorted(contours, key = cv2.contourArea, reverse = True)
 
-#Finds the contour with 4 corners with the biggest area
-filtered = utils.contour_filtering(contours)
+#Finds the contour with the biggest area which has 4 corners
+filtered = utils.contour_filtering(contours, epsilon_scale=0.02, min_area_threshold=1000)
 
-# Sometimes method doesn't find 4 corners, then return error
+# Sometimes the method doesn't find 4 corners -> then return error
 if filtered.size == 0:
     print("No 4 vertices found! Exiting..")
     exit(1)
 
-# Draw the biggest 4 corner contour
+# Draw the filtered out contour
 cv2.drawContours(img, [filtered], -1, (0, 255, 0), 3)
 
-# get corner points in pixel values
+# get corner points of the contour in pixel values
 corner_points = utils.get_corner_points(filtered)
 
 # Draw circles over the corners

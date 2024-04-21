@@ -5,11 +5,11 @@ from matplotlib import pyplot as plt
 # import lineDetection as lines
 import note_utils as utils
     
+# Read the image and modify it
 img = cv2.imread('ryddet mappe/images/test.jpg')
 img = cv2.resize(img, (700,700))
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 edges = cv2.Canny(gray,150,250)
-# cv2.imshow('hough',edges)
 
 gris = utils.removeLines(edges)
 params = utils.getNoteDetectParams(400,1500)
@@ -25,8 +25,9 @@ for note in cv2.KeyPoint_convert(keypoints):
     image = cv2.circle(img, (round(note[0]),round(note[1])), radius, color=(0,0,255), thickness=-1)
     circles.append((int(note[0]),int(note[1]),radius))
 cv2.imshow("Notes found", img)
-
 cv2.waitKey(0)
+cv2.destroyAllWindows()
+
 # Find the lines in the image using the hough transform (output is in polar coordinates)
 lines_ro_theta = cv2.HoughLines(edges,1,np.pi/180,200) # 200 is the threshold
 
@@ -37,7 +38,8 @@ for line in lines_ro_theta:
         epsilon = np.pi/6 
         wanted_angle = np.pi/2
         # Filter out lines that are not horizontal
-        if theta < wanted_angle - epsilon or theta > wanted_angle + epsilon: continue 
+        if theta < (wanted_angle - epsilon) or theta > (wanted_angle + epsilon): 
+            continue 
 
         # calculate the x and y starting/ending coordinates of the lines from the rho and theta
         x1, y1, x2, y2 = utils.getLinePosition(rho, theta)
@@ -57,7 +59,7 @@ for line in sorted_lines:
 # Split the lines into groups of 5 (5 lines per staff)
 split_lines = [sorted_lines[i:i+5] for i in range(0, len(sorted_lines), 5)]
 
-# Add note positions to the lines
+# Add note position to every line
 note_index = 1
 for sublist in split_lines:
     for index, tup in enumerate(sublist):
@@ -84,14 +86,15 @@ for circle in circle_positions:
 # Draw the notes on the image
 for circle in circles:
     no_intersection_found = True
-    (x_c,y_c,r) = circle
     g_clef = True
-
+    (x_c,y_c,r) = circle
+    
     line_spacing = split_lines[0][0][3]-split_lines[0][1][3]
 
     closest_line = None
     closest_distance = float('inf')
 
+    # Find the closest line to the circle (note)
     for line in split_lines:
         for x1, y1, x2, y2, rho, theta, note_pos, g_clef in line:
             distance = abs(y_c - ((y1 + y2) / 2))
@@ -99,11 +102,12 @@ for circle in circles:
                 closest_distance = distance
                 closest_line = line
     
+    # Get the clef of the closest line
     if closest_line is not None:
         g_clef = closest_line[0][-1]
 
     for line in split_lines:
-        for x1,y1,x2,y2,rho,theta,note_pos,geir in line:
+        for x1,y1,x2,y2,rho,theta,note_pos,_ in line:
             intersect = utils.line_circle_intersection((x1,y1),(x2,y2),(x_c,y_c),r)
             
             if intersect and g_clef:
@@ -121,7 +125,7 @@ for circle in circles:
         utils.draw_notes_no_intersection_fclef(split_lines, img, x_c, y_c, line_spacing)
 
 cv2.namedWindow("hough", cv2.WINDOW_NORMAL) #så ikke zoomed-in
-cv2.resizeWindow("hough", img.shape[0]-200, img.shape[1]-130) 
+cv2.resizeWindow("hough", img.shape[0], img.shape[1]) 
 cv2.imshow('hough',img)
 cv2.imwrite('notes_found.jpg', img)
 cv2.waitKey(0)
