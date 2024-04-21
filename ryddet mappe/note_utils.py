@@ -32,6 +32,46 @@ def getNoteDetectParams(minAreal,maxAreal):
 	params.maxInertiaRatio = 0.56
 	return params
 
+#True: close line, False: not close line
+def check_close_line(line,filter_lines,treshold, img):
+    x1,y1,x2,y2, rho, theta = line
+    avg_y = (y1 + y2) / 2
+    for filter_line in filter_lines:
+        avg_y_filter = (filter_line[1] + filter_line[3]) / 2
+        #last two conditions are for lines that are close to the top or bottom of the image
+        if abs(avg_y - avg_y_filter) < treshold or abs(y1 - img.shape[0]) < 20 or (y1 < 20): 
+            return True
+    return False
+
+def remove_close_lines(lines, treshold, img):
+    filter_lines = [lines[0]]
+    for line in lines:
+        is_close = check_close_line(line,filter_lines,treshold, img)
+        if not is_close: filter_lines.append(line)
+    return filter_lines
+
+def line_circle_intersection(line_start, line_end, circle_center, circle_radius):
+    # Vector representation of the line
+    line_vec = np.array(line_end) - np.array(line_start)
+    
+    # Vector from line start to circle center
+    start_to_center = np.array(circle_center) - np.array(line_start)
+    
+    # Projection of start_to_center vector onto line_vec
+    projection = np.dot(start_to_center, line_vec) / np.dot(line_vec, line_vec) * line_vec
+    
+    # Closest point on the line to the circle center
+    closest_point = np.array(line_start) + projection
+    
+    # Distance between closest point and circle center
+    distance = np.linalg.norm(closest_point - circle_center)
+    
+    # If the distance is less than or equal to the circle radius, there's an intersection
+    if distance <= circle_radius:
+        return True
+    else:
+        return False
+
 def draw_notes_intersetion_gclef(img, note_pos,x_c, y_c):
     if note_pos == 1:
         print("note is a E")
