@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 # import lineDetection as lines
 import note_utils as utils
     
-img = cv2.imread('assets/halvor.jpg')
+img = cv2.imread('ryddet mappe/images/test.jpg')
 img = cv2.resize(img, (700,700))
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 edges = cv2.Canny(gray,150,250)
