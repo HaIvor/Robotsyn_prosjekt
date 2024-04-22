@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 import note_utils as utils
     
 # Read the image and modify it
-img = cv2.imread('ryddet mappe/images/test.jpg')
+img = cv2.imread('ryddet mappe/images/warped_image.jpg')
 # img = cv2.resize(img, (700,700))
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 gray = cv2.bitwise_not(gray)
@@ -53,7 +53,7 @@ filtered_lines = utils.remove_close_lines(lines_x_y, close_threshold, img)
 
 # Sort lines by rho value (distance from origin)
 sorted_lines = sorted(filtered_lines, key=lambda x: x[4], reverse=True)
-
+line_spacing = sorted_lines[0][3]-sorted_lines[1][3]
 # Draw the lines on the image
 for line in sorted_lines:
     x1, y1, x2, y2, rho, theta = line

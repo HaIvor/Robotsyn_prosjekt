@@ -104,6 +104,6 @@ cv2.resizeWindow("warped_perspective", width_warped, height_warped)
 cv2.imshow("warped_perspective", img_output)
 
 # Saving the warped image so it can be used in the next step
-cv2.imwrite("ryddet mappe/images/test.jpg", img_output)
+cv2.imwrite("ryddet mappe/images/warped_image.jpg", img_output)
 
 cv2.waitKey(0)
