@@ -2,13 +2,15 @@ import cv2
 import numpy as np 
 from matplotlib import pyplot as plt
 
-# import lineDetection as lines
+# import functions from note_utils.py
 import note_utils as utils
     
 # Read the image and modify it
 img = cv2.imread('ryddet mappe/images/test.jpg')
 img = cv2.resize(img, (700,700))
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+gray =~gray
+cv2.imshow("Gray", gray)
 edges = cv2.Canny(gray,150,250)
 
 gris = utils.removeLines(edges)

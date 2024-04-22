@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import warping_utils as utils
 
-img = cv2.imread("ryddet mappe/images/abc_iphone3.jpg")
+img = cv2.imread("ryddet mappe/images/abc_iphone3.JPG")
 img_original = img.copy()
 
 # Image modification
