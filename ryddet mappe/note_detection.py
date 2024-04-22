@@ -93,20 +93,34 @@ for circle in circles:
     
     line_spacing = split_lines[0][0][3]-split_lines[0][1][3]
 
-    closest_line = None
-    closest_distance = float('inf')
+    # closest_distance = float('inf')
 
-    # Find the closest line to the circle (note)
+    # # Find the closest line to the circle (note)
+    # for line in split_lines:
+    #     for x1, y1, x2, y2, rho, theta, note_pos, g_clef in line:
+    #         distance = abs(y_c - ((y1 + y2) / 2))
+    #         if distance < closest_distance:
+    #             closest_distance = distance
+    #             closest_line = line
+
+    smallest_distance = float("inf")
+    distances_info = []
+    distance_info = ()
+    closest_line_gclef = None
     for line in split_lines:
         for x1, y1, x2, y2, rho, theta, note_pos, g_clef in line:
-            distance = abs(y_c - ((y1 + y2) / 2))
-            if distance < closest_distance:
-                closest_distance = distance
-                closest_line = line
-    
+            distance = abs(int(y2) - int(y_c))
+            distance_info = (distance, note_pos, y2, g_clef)
+            distances_info.append(distance_info)
+    distances_info_sorted = sorted(distances_info, key=lambda x: x[0])
+    closest_note_pos = distances_info_sorted[0][1]
+    second_closest_note_pos = distances_info_sorted[1][1]
+    closest_line_gclef = distances_info_sorted[0][3]
+    closest_line_yvalue = distances_info_sorted[0][2]
+
     # Get the clef of the closest line
-    if closest_line is not None:
-        g_clef = closest_line[0][-1]
+    if closest_line_gclef is not None:
+        g_clef = closest_line_gclef
 
     for line in split_lines:
         for x1,y1,x2,y2,rho,theta,note_pos,_ in line:
@@ -124,7 +138,7 @@ for circle in circles:
         utils.draw_notes_no_intersection_gclef(split_lines, img, x_c, y_c, line_spacing)
 
     if no_intersection_found and not g_clef:
-        utils.draw_notes_no_intersection_fclef(split_lines, img, x_c, y_c, line_spacing)
+        utils.draw_notes_no_intersection_fclef(split_lines, img, x_c, y_c, line_spacing, closest_note_pos, closest_line_yvalue, second_closest_note_pos)
 
 cv2.namedWindow("hough", cv2.WINDOW_NORMAL) #så ikke zoomed-in
 cv2.resizeWindow("hough", img.shape[0], img.shape[1]) 

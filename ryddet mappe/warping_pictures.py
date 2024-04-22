@@ -38,7 +38,10 @@ while True:
     gray_filtered = cv2.bilateralFilter(gray, diameter_pos, sigmaColor_pos, sigmaSpace_pos)
     edged = cv2.Canny(gray_filtered, threshold1_pos, threshold2_pos)
     cv2.imshow("trackbar_window", edged)
-    cv2.imshow("original_image", img)
+    cv2.imshow("original_image", img_original)
+
+    # Draw text on the image
+    cv2.putText(img_original, "Press q to exit", (10, 300), cv2.FONT_HERSHEY_SIMPLEX, 10, (0, 0, 255), 4)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cv2.destroyAllWindows()

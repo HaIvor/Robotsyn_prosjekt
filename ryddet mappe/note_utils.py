@@ -166,50 +166,27 @@ def draw_notes_no_intersection_gclef(split_lines, img, x_c, y_c, line_spacing):
         cv2.putText(img, "E", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
     # print("No intersection found")
 
-def draw_notes_no_intersection_fclef(split_lines, img, x_c, y_c, line_spacing):
+def draw_notes_no_intersection_fclef(split_lines, img, x_c, y_c, line_spacing, closest_note_pos, closest_line_yvalue, second_closest_note_pos):
     #code for notes in between lines
-    smallest_distance = 1000000
-    distances_info = []
-    distance_info = ()
-    test_distance = []
-    for line in split_lines:
-        for x1, y1, x2, y2, rho, theta, note_pos, g_clef in line:
-            # print("y2:", y2)
-            # print("y_c:", y_c)
-            distance = abs(int(y2) - int(y_c))
-            # print("distance1:", distance)
-            test_distance.append(distance)
-            distance_info = (distance, note_pos, y2)
-            distances_info.append(distance_info)
-            # print("appended:" ,distance_info)
-            # print("distances_info for now", distances_info)
-    # print("distances_info:",distances_info)
-    # print("test_distance:",test_distance)
-    # print("distances_info:",distances_info)
-    distances_info_sorted = sorted(distances_info, key=lambda x: x[0])
-    # print("distances_info_sorted:",distances_info_sorted)
-    # print("distances_info_sorted:",distances_info_sorted)
-    closest_note_pos = distances_info_sorted[0][1]
-    second_closest_note_pos = distances_info_sorted[1][1]
-    if closest_note_pos == 1 and (y_c > distances_info_sorted[0][2]) and (y_c - distances_info_sorted[0][2] < line_spacing):
+
+    if closest_note_pos == 1 and (y_c > closest_line_yvalue) and (y_c - closest_line_yvalue < line_spacing):
         print("Note is F (b)")
         cv2.putText(img, "F,f (b)", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
         print("values:",x_c, y_c)
         return
-    if closest_note_pos == 1 and (y_c > distances_info_sorted[0][2]) and (y_c - distances_info_sorted[0][2] > line_spacing):
+    if closest_note_pos == 1 and (y_c > closest_line_yvalue) and (y_c - closest_line_yvalue > line_spacing):
         print("Note is E (bb)")
         cv2.putText(img, "E,f (bb)", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
         return
-    if closest_note_pos == 5 and (y_c < distances_info_sorted[0][2]) and (distances_info_sorted[0][2] - y_c < line_spacing):
+    if closest_note_pos == 5 and (y_c < closest_line_yvalue) and (closest_line_yvalue - y_c < line_spacing):
         print("Note is B (top)")
         cv2.putText(img, "B,f (t)", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
         return
-    if closest_note_pos == 5 and (y_c < distances_info_sorted[0][2]) and (distances_info_sorted[0][2] - y_c > line_spacing):
+    if closest_note_pos == 5 and (y_c < closest_line_yvalue) and (closest_line_yvalue - y_c > line_spacing):
         print("Note is C (toptop)")
         cv2.putText(img, "C,f (tt)", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
         return
-    # print("closest_note_pos and second_closest_note_pos:",closest_note_pos,second_closest_note_pos)
-    # print("distances_info_sorted",distances_info_sorted)
+    
     if closest_note_pos == 1 and second_closest_note_pos == 2 or closest_note_pos == 2 and second_closest_note_pos == 1:
         print("note is a A")
         cv2.putText(img, "A,f", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
@@ -222,4 +199,3 @@ def draw_notes_no_intersection_fclef(split_lines, img, x_c, y_c, line_spacing):
     elif closest_note_pos == 4 and second_closest_note_pos == 5 or closest_note_pos == 5 and second_closest_note_pos == 4:
         print("note is a G")
         cv2.putText(img, "G,f", (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-    # print("No intersection found")
