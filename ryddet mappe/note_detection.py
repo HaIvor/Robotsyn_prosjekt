@@ -51,6 +51,13 @@ for line in lines_ro_theta:
 close_threshold = 30
 filtered_lines = utils.remove_close_lines(lines_x_y, close_threshold, img)
 
+for line in filtered_lines:
+    x1, y1, x2, y2, rho, theta = line
+    # Filter out lines that occur at the edge of the image
+    filtered_lines = [line for line in filtered_lines if line[3] < img.shape[1] - 10]
+    # Filter out lines that occur at the top of the image
+    filtered_lines = [line for line in filtered_lines if line[1] > 0]
+
 # Sort lines by rho value (distance from origin)
 sorted_lines = sorted(filtered_lines, key=lambda x: x[4], reverse=True)
 line_spacing = sorted_lines[0][3]-sorted_lines[1][3]
